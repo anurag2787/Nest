@@ -101,6 +101,33 @@ export default function PulseFilters({
     ))
   }
 
+  let chapterSuggestionsContent: ReactNode
+
+  if (isSearchingChapters) {
+    chapterSuggestionsContent = (
+      <div className="px-3.5 py-2 text-xs text-gray-400">Searching chapters...</div>
+    )
+  } else if (chapterSuggestions.length === 0) {
+    chapterSuggestionsContent = (
+      <div className="px-3.5 py-2 text-xs text-gray-400">No chapter suggestions found</div>
+    )
+  } else {
+    chapterSuggestionsContent = chapterSuggestions.map((chap) => (
+      <button
+        key={chap.id || chap.name}
+        type="button"
+        onMouseDown={(e) => {
+          e.preventDefault()
+          handleSelectChapter(chap)
+        }}
+        onClick={() => handleSelectChapter(chap)}
+        className="flex w-full items-center justify-between px-3.5 py-2 text-left text-xs font-medium text-gray-700 hover:bg-blue-50 dark:text-gray-200 dark:hover:bg-gray-700"
+      >
+        <span className="font-semibold text-gray-900 dark:text-white">{chap.name}</span>
+      </button>
+    ))
+  }
+
   return (
     <div className="space-y-4 rounded-xl border border-gray-200 bg-white p-5 shadow-sm dark:border-gray-700 dark:bg-gray-800">
       <div className="flex flex-col gap-3 sm:flex-row sm:items-center">
@@ -187,28 +214,7 @@ export default function PulseFilters({
 
           {showChapterSuggestions && (
             <div className="absolute top-full right-0 left-0 z-50 mt-1 max-h-60 overflow-y-auto rounded-lg border border-gray-200 bg-white py-1 shadow-lg dark:border-gray-700 dark:bg-gray-800">
-              {isSearchingChapters ? (
-                <div className="px-3.5 py-2 text-xs text-gray-400">Searching chapters...</div>
-              ) : chapterSuggestions.length === 0 ? (
-                <div className="px-3.5 py-2 text-xs text-gray-400">
-                  No chapter suggestions found
-                </div>
-              ) : (
-                chapterSuggestions.map((chap) => (
-                  <button
-                    key={chap.id || chap.name}
-                    type="button"
-                    onMouseDown={(e) => {
-                      e.preventDefault()
-                      handleSelectChapter(chap)
-                    }}
-                    onClick={() => handleSelectChapter(chap)}
-                    className="flex w-full items-center justify-between px-3.5 py-2 text-left text-xs font-medium text-gray-700 hover:bg-blue-50 dark:text-gray-200 dark:hover:bg-gray-700"
-                  >
-                    <span className="font-semibold text-gray-900 dark:text-white">{chap.name}</span>
-                  </button>
-                ))
-              )}
+              {chapterSuggestionsContent}
             </div>
           )}
         </div>
